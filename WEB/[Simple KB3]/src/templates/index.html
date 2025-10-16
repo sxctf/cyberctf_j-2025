@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auth Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .fade-enter { opacity: 0; transform: translateY(15px); }
+    .fade-enter-active { opacity: 1; transform: translateY(0); transition: all 0.4s ease; }
+    .fade-exit { opacity: 1; transform: translateY(0); }
+    .fade-exit-active { opacity: 0; transform: translateY(-15px); transition: all 0.4s ease; }
+  </style>
+</head>
+<body class="bg-black text-gray-200 flex items-center justify-center h-screen">
+
+  <div class="w-96 bg-zinc-900 rounded-2xl shadow-lg p-6 relative">
+    <!-- Tabs -->
+    <div class="flex justify-around mb-6">
+      <button id="loginTab" class="tab-btn text-blue-400 font-semibold border-b-2 border-blue-400 pb-1">Login</button>
+      <button id="registerTab" class="tab-btn text-gray-400 hover:text-blue-400 pb-1">Register</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="loginForm" class="space-y-4 fade-enter-active">
+      <div>
+        <label class="block text-sm mb-1">Username</label>
+        <input id="loginUsername" type="text" required class="w-full p-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:border-blue-400 focus:outline-none">
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Password</label>
+        <input id="loginPassword" type="password" required class="w-full p-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:border-blue-400 focus:outline-none">
+      </div>
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 rounded-xl py-2 font-semibold">Login</button>
+    </form>
+
+    <!-- Register Form -->
+    <form id="registerForm" class="space-y-4 hidden">
+      <div>
+        <label class="block text-sm mb-1">Username</label>
+        <input id="regUsername" type="text" required class="w-full p-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:border-blue-400 focus:outline-none">
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Password</label>
+        <input id="regPassword" type="password" required class="w-full p-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:border-blue-400 focus:outline-none">
+      </div>
+      <div>
+        <label class="block text-sm mb-1">Confirm Password</label>
+        <input id="regConfirm" type="password" required class="w-full p-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:border-blue-400 focus:outline-none">
+      </div>
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 rounded-xl py-2 font-semibold">Register</button>
+    </form>
+
+    <!-- Alert -->
+    <div id="alertBox" class="hidden mt-4 p-2 rounded-lg text-sm text-center"></div>
+  </div>
+
+  <script>
+    const loginTab = document.getElementById("loginTab");
+    const registerTab = document.getElementById("registerTab");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const alertBox = document.getElementById("alertBox");
+
+    function showAlert(message, type="success") {
+      alertBox.textContent = message;
+      alertBox.className = `mt-4 p-2 rounded-lg text-sm text-center ${type === "success" ? "bg-green-600" : "bg-red-600"}`;
+      alertBox.classList.remove("hidden");
+      setTimeout(() => alertBox.classList.add("hidden"), 4000);
+    }
+
+    function switchForm(showForm, hideForm, activeTab, inactiveTab) {
+      hideForm.classList.add("fade-exit-active");
+      setTimeout(() => {
+        hideForm.classList.add("hidden");
+        hideForm.classList.remove("fade-exit-active");
+
+        showForm.classList.remove("hidden");
+        showForm.classList.add("fade-enter");
+        setTimeout(() => {
+          showForm.classList.add("fade-enter-active");
+          showForm.classList.remove("fade-enter");
+        }, 10);
+      }, 300);
+
+      activeTab.classList.add("text-blue-400", "border-b-2", "border-blue-400");
+      inactiveTab.classList.remove("text-blue-400", "border-b-2", "border-blue-400");
+      inactiveTab.classList.add("text-gray-400");
+    }
+
+    loginTab.addEventListener("click", () => switchForm(loginForm, registerForm, loginTab, registerTab));
+    registerTab.addEventListener("click", () => switchForm(registerForm, loginForm, registerTab, loginTab));
+
+    // LOGIN
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = {
+        username: document.getElementById("loginUsername").value,
+        password: document.getElementById("loginPassword").value
+      };
+
+      try {
+        const res = await fetch("/api/v1/auth", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        if (json.status === "200") {
+          showAlert("✅ " + json.message, "success");
+
+          setTimeout(() => {
+            window.location.href = "/content";
+            }, 1000);
+        } else {
+          showAlert("❌ " + json.message, "error");
+        }
+      } catch (err) {
+        showAlert("❌ Network error", "error");
+      }
+    });
+
+    // REGISTER
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = {
+        username: document.getElementById("regUsername").value,
+        password: document.getElementById("regPassword").value,
+        confirmpassword: document.getElementById("regConfirm").value
+      };
+
+      try {
+        const res = await fetch("/api/v1/registration", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        if (json.status === "200") {
+          showAlert("✅ " + json.message, "success");
+
+          registerForm.reset();
+        
+          setTimeout(() => {
+            switchForm(loginForm, registerForm, loginTab, registerTab);
+        }, 1000);
+
+            
+
+        } else {
+          showAlert("❌ " + json.message, "error");
+
+          registerForm.reset();
+
+        }
+      } catch (err) {
+        showAlert("❌ Network error", "error");
+      }
+    });
+  </script>
+</body>
+</html>

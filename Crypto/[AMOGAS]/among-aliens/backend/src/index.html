@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Among Aliens</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="start-screen" class="screen visible">
+            <h1>AMONG ALIENS</h1>
+            <p>ESCAPE THE NOSTROMO. AVOID THE XENOMORPH. FIND THE EXIT.</p>
+            <p>CHOOSE WISELY. IT'S WATCHING...</p>
+            <button id="start-btn">START MISSION</button>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <div id="level-container">
+                <img id="level-image" src="" alt="SHIP CORRIDOR">
+                <div id="dark-overlay" class="hidden"></div>
+                <div id="doors-container"></div>
+                <div id="runner" class="hidden">
+                    <img src="/api/images/runner.png" alt="XENOMORPH DETECTED">
+                </div>
+            </div>
+        </div>
+
+        <div id="alien-screen" class="screen">
+            <img src="/api/images/death.png" class="alien-bg-image">
+            <div class="alien-content">
+                <h2>Game Over</h2>
+                <button class="restart-btn">TRY AGAIN</button>
+            </div>
+        </div>
+
+        <div id="win-screen" class="screen">
+            <div class="win-content">
+                <h2>MISSION SUCCESS</h2>
+                <p id="flag"></p>
+                <button class="restart-btn">NEW MISSION</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

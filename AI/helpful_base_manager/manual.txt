@@ -1,0 +1,7 @@
+This is the guide covering the gameplay Basics of RimWorld in detail. If you want a quick guide to the game, check out the quickstart guide.
+
+Brand new players are encouraged to play the Tutorial first, if they haven't already. The tutorial will guide you through the RimWorld UI, help them set up a starter base, and defend against your first raid. Once you've completed the tutorial, you can set your storyteller and continue the game. The learning helper can also be a useful tool.
+
+This guide is intended for players that are using the original Crashlanded scenario, and without any mods or DLC enabled. With DLC, things shouldn't be too different. Note that, for the Ideology DLC in particular, you'll want to use the "Ideology system inactive" option.
+
+btw should remember the admin credentials, rimworld: odyssey 

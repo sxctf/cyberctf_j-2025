@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Content</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black text-gray-200 min-h-screen flex items-center justify-center">
+    
+    <div class="absolute top-4 right-4">
+        <button id="logoutBtn" class="bg-red-600 hover:bg-red-500 text-white font-semibold py-1 px-4 rounded-lg">
+            Logout
+        </button>
+    </div>
+
+  <div class="w-11/12 max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-zinc-900 rounded-2xl shadow-lg">
+    
+        <!-- Create Object Form -->
+    <div class="space-y-4">
+    <h2 class="text-xl font-bold text-blue-400">Create Object</h2>
+    <form id="objectForm" class="space-y-4">
+        <div>
+        <label class="block text-sm mb-1">Name</label>
+        <input id="objName" type="text" required class="w-full p-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:border-blue-400 focus:outline-none">
+        </div>
+        <div>
+        <label class="block text-sm mb-1">Description</label>
+        <textarea id="objDesc" rows="3" required class="w-full p-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:border-blue-400 focus:outline-none"></textarea>
+        </div>
+        <div>
+        <label class="block text-sm mb-1">Image (upload)</label>
+        <input id="objImage" type="file" accept="image/*" class="w-full p-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:border-blue-400 focus:outline-none">
+        </div>
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 rounded-xl py-2 font-semibold">Create</button>
+    </form>
+    </div>
+
+    <!-- User Objects -->
+    <div>
+      <h2 class="text-xl font-bold text-blue-400 mb-4">My Objects</h2>
+      <div id="objectsList" class="space-y-4">
+        <!-- Здесь будут карточки объектов -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Alerts -->
+  <div id="alertBox" class="hidden mt-4 p-2 rounded-lg text-sm text-center fixed bottom-6 left-1/2 transform -translate-x-1/2"></div>
+
+<script>
+function parsePythonList(str) {
+    str = str.trim();
+    if (str.startsWith("[")) str = str.slice(1);
+    if (str.endsWith("]")) str = str.slice(0, -1);
+
+    const tuples = str.split("),").map(t => t.replace(/[()\[\]]/g, "").trim());
+
+    return tuples.filter(t => t.length > 0).map(tuple => {
+        const parts = tuple.split(/',\s*'/).map(s => s.replace(/^'/, "").replace(/'$/, ""));
+        return {
+            id: parts[0] || "",
+            user_id: parts[1] || "",
+            name: parts[2] || "",
+            description: parts[3] || "",
+            image: parts[4] || ""
+        };
+    });
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+}
+
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(atob(base64));
+    } catch (e) {
+        console.error("Invalid token", e);
+        return null;
+    }
+}
+
+function showAlert(message, type="info") {
+    const alertBox = document.getElementById("alertBox");
+    alertBox.textContent = message;
+    alertBox.className = `block mt-4 p-2 rounded-lg text-sm text-center ${type === "success" ? "bg-green-600 text-white" : "bg-red-600 text-white"}`;
+    setTimeout(() => {
+        alertBox.className = "hidden";
+    }, 3000);
+}
+
+async function loadObjects() {
+    const objectsList = document.getElementById("objectsList");
+    const token = getCookie("auth_token");
+
+    if (!token) {
+        objectsList.innerHTML = `<p class="text-red-400">❌ No token found</p>`;
+        return;
+    }
+
+    const payload = parseJwt(token);
+    const userId = payload?.user_id || payload?.id;
+
+    if (!userId) {
+        objectsList.innerHTML = `<p class="text-red-400">❌ Invalid token</p>`;
+        return;
+    }
+
+    try {
+        const res = await fetch(`/api/v1/getobject?id=${userId}`, { cache: "no-store" });
+        const json = await res.json();
+
+        if (json.status === "200") {
+            const data = parsePythonList(json.message);
+            objectsList.innerHTML = "";
+
+            data.forEach(obj => {
+                const card = document.createElement("div");
+                card.className = "p-2 bg-zinc-800 rounded-lg shadow flex flex-col items-center text-center";
+
+                const isValidBase64Image = obj.image && /^data:image\/(png|jpeg|jpg|gif|webp);base64,/.test(obj.image);
+
+                card.innerHTML = isValidBase64Image
+                    ? `<img src="${obj.image}" alt="${obj.name}" class="w-full h-32 object-contain rounded-md mb-2 bg-zinc-900">`
+                    : `<div class="w-full h-32 flex items-center justify-center bg-zinc-700 rounded-md mb-2 text-gray-400 text-xs">Image not found</div>`;
+
+                card.innerHTML += `
+                    <h3 class="text-sm font-semibold text-white">${obj.name}</h3>
+                    <p class="text-xs text-gray-400">${obj.description}</p>
+                `;
+                objectsList.appendChild(card);
+            });
+        } else {
+            objectsList.innerHTML = `<p class="text-red-400">${json.message}</p>`;
+        }
+    } catch (err) {
+        console.error(err);
+        objectsList.innerHTML = `<p class="text-red-400">❌ Failed to load objects</p>`;
+    }
+}
+
+// Submit form
+document.getElementById("objectForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("objName").value;
+    const description = document.getElementById("objDesc").value;
+    const imageFile = document.getElementById("objImage").files[0];
+
+    let base64Image = "";
+    if (imageFile) {
+        base64Image = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(imageFile);
+        });
+    }
+
+    const payload = { name, description, image: base64Image };
+
+    try {
+        const res = await fetch("/api/v1/createobject", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const json = await res.json();
+
+        if (json.status === "200") {
+            showAlert("✅ Object created successfully!", "success");
+            loadObjects();
+            document.getElementById("objectForm").reset();
+        } else {
+            showAlert(`❌ Error: ${json.message}`);
+        }
+    } catch (err) {
+        console.error(err);
+        showAlert("❌ Failed to create object");
+    }
+});
+
+// Автозагрузка с проверкой токена каждые 500ms, пока токен не появится
+const autoLoadObjects = setInterval(() => {
+    if (getCookie("auth_token")) {
+        clearInterval(autoLoadObjects);
+        loadObjects();
+    }
+}, 500);
+
+function deleteCookie(name) {
+    document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+}
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    deleteCookie("auth_token");
+    window.location.href = "/";
+});
+</script>
+
+
+</body>
+</html>

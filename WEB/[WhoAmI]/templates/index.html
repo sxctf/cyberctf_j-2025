@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The main page of the cosmic reports</title>
+</head>
+<body>
+    <h1>Reports list:</h1>
+    {% for post in posts %}
+        <div style="border-bottom: 1px solid black; padding: 10px; margin-bottom: 10px;">
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.content }}</p>
+            <small> Published {{ post.created }}</small>
+        </div>
+    {% endfor %}
+    <a href="/new-post">Create a new report</a>
+</body>
+</html>
+{% endblock %}

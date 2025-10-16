@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  web-task-2:
+    build:
+       context: ./src
+       dockerfile: Dockerfile
+    container_name: web-task-2
+    hostname: web-task-2
+    volumes:
+    - ./src:/app
+    command: python3 app.py
+    environment:
+    - PYTHONUNBUFFERED=1 
+    ports:
+      - 8992:8080
+    restart: always 

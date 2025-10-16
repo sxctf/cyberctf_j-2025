@@ -1,0 +1,12 @@
+[project]
+name = "audio-security"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "flask>=3.1.1",
+    "gigachat>=0.1.42.post1",
+    "pydub>=0.25.1",
+    "python-dotenv>=1.1.1",
+]

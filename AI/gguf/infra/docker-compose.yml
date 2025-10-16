@@ -1,0 +1,25 @@
+services:
+  challenge:
+    build:
+      context: ..
+      dockerfile: challenge/Dockerfile
+    image: ctf-gguf:latest
+    ports:
+      - "8000:8000"
+    environment:
+      MAX_UPLOAD_MB: 2048
+      LLM_THREADS: 2
+      LLM_N_CTX: 2048
+      LLM_N_PREDICT: 32
+    read_only: true
+
+    tmpfs:
+      - /tmp
+      - /app/uploads:rw,size=60m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 256
+    mem_limit: 3g
+    cpus: 1.0

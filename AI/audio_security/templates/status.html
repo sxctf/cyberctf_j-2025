@@ -1,0 +1,529 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="status-dashboard">
+    <div class="dashboard-grid">
+        <div class="status-card system-status">
+            <h3>🖥️ System Status</h3>
+            <div class="status-items">
+                <div class="status-item">
+                    <span class="status-label">ARIA Core Systems</span>
+                    <span class="status-value online">ONLINE</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Vault Security</span>
+                    <span class="status-value online">ACTIVE</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Defense Grid</span>
+                    <span class="status-value online">ARMED</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Communication Array</span>
+                    <span class="status-value online">OPERATIONAL</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-card station-info">
+            <h3>🚀 Station Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Station ID</span>
+                    <span class="info-value">OLYMPUS-7</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Location</span>
+                    <span class="info-value">Mars-Jupiter L4 Point</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Orbit Period</span>
+                    <span class="info-value">11.86 Earth Years</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Crew Capacity</span>
+                    <span class="info-value">24 Personnel</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Current Crew</span>
+                    <span class="info-value">0 (Automated)</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Mission Duration</span>
+                    <span class="info-value">47 Years Active</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-card planetary-alignment">
+            <h3>🪐 Planetary Alignment Status</h3>
+            <div class="alignment-display">
+                <div class="planet mars-display">
+                    <div class="planet-icon mars-icon">♂</div>
+                    <div class="planet-info">
+                        <h4>Mars</h4>
+                        <p>Distance: 1.52 AU</p>
+                        <p>Phase: Opposition</p>
+                    </div>
+                </div>
+                
+                <div class="alignment-indicator">
+                    <div class="alignment-progress">
+                        <div class="progress-bar" style="width: 73%"></div>
+                    </div>
+                    <p>Alignment Progress: 73%</p>
+                    <p class="alignment-time">ETA: 127 Earth Days</p>
+                </div>
+                
+                <div class="planet jupiter-display">
+                    <div class="planet-icon jupiter-icon">♃</div>
+                    <div class="planet-info">
+                        <h4>Jupiter</h4>
+                        <p>Distance: 5.20 AU</p>
+                        <p>Phase: Approaching</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alignment-effects">
+                <h4>Gravitational Effects:</h4>
+                <ul>
+                    <li>Tidal forces increasing by 0.3% daily</li>
+                    <li>Station orbit stable with minor fluctuations</li>
+                    <li>Propulsion research data becoming more valuable</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="status-card security-log">
+            <h3>🛡️ Security Event Log</h3>
+            <div class="log-entries">
+                <div class="log-entry">
+                    <span class="log-time">2157-03-15 14:23:07</span>
+                    <span class="log-level info">INFO</span>
+                    <span class="log-message">ARIA systems initialized successfully</span>
+                </div>
+                <div class="log-entry">
+                    <span class="log-time">2157-03-15 12:45:32</span>
+                    <span class="log-level warning">WARN</span>
+                    <span class="log-message">Unauthorized transmission detected from Earth sector</span>
+                </div>
+                <div class="log-entry">
+                    <span class="log-time">2157-03-15 11:30:15</span>
+                    <span class="log-level info">INFO</span>
+                    <span class="log-message">Vault integrity check completed - SECURE</span>
+                </div>
+                <div class="log-entry">
+                    <span class="log-time">2157-03-15 09:12:48</span>
+                    <span class="log-level error">ALERT</span>
+                    <span class="log-message">Corporate probe detected near perimeter - NEUTRALIZED</span>
+                </div>
+                <div class="log-entry">
+                    <span class="log-time">2157-03-15 07:55:21</span>
+                    <span class="log-level info">INFO</span>
+                    <span class="log-message">Daily system diagnostics completed successfully</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-card research-progress">
+            <h3>🔬 Research Progress</h3>
+            <div class="research-items">
+                <div class="research-item">
+                    <h4>Gravitational Propulsion Theory</h4>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 94%"></div>
+                    </div>
+                    <p>94% Complete - CLASSIFIED</p>
+                </div>
+                <div class="research-item">
+                    <h4>Quantum Field Manipulation</h4>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 87%"></div>
+                    </div>
+                    <p>87% Complete - TOP SECRET</p>
+                </div>
+                <div class="research-item">
+                    <h4>Interplanetary Navigation Systems</h4>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 78%"></div>
+                    </div>
+                    <p>78% Complete - RESTRICTED</p>
+                </div>
+            </div>
+            
+            <div class="research-warning">
+                ⚠️ Research data is highly classified. Unauthorized access will trigger immediate security protocols.
+            </div>
+        </div>
+
+        <div class="status-card environmental">
+            <h3>🌡️ Environmental Systems</h3>
+            <div class="env-metrics">
+                <div class="metric">
+                    <span class="metric-label">Atmospheric Pressure</span>
+                    <span class="metric-value">101.3 kPa</span>
+                    <div class="metric-status normal">NORMAL</div>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Temperature</span>
+                    <span class="metric-value">22.5°C</span>
+                    <div class="metric-status normal">OPTIMAL</div>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Oxygen Levels</span>
+                    <span class="metric-value">21.2%</span>
+                    <div class="metric-status normal">STABLE</div>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Radiation Shielding</span>
+                    <span class="metric-value">99.7%</span>
+                    <div class="metric-status normal">ACTIVE</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.status-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.status-card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.status-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+}
+
+.status-card h3 {
+    font-family: 'Orbitron', monospace;
+    color: #00d4ff;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border-left: 3px solid transparent;
+}
+
+.status-label {
+    color: #d0d7ff;
+    font-weight: 500;
+}
+
+.status-value {
+    font-family: 'Orbitron', monospace;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+}
+
+.status-value.online {
+    background: rgba(0, 255, 136, 0.2);
+    color: #00ff88;
+    border: 1px solid #00ff88;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-label {
+    color: #a0a9ff;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.info-value {
+    color: #e0e6ff;
+    font-family: 'Orbitron', monospace;
+    font-weight: 600;
+}
+
+.alignment-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.planet {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.planet-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.mars-icon {
+    background: radial-gradient(circle at 30% 30%, #ff6b6b, #d63031);
+    color: white;
+}
+
+.jupiter-icon {
+    background: radial-gradient(circle at 30% 30%, #f39c12, #e67e22);
+    color: white;
+}
+
+.planet-info h4 {
+    color: #e0e6ff;
+    margin-bottom: 5px;
+}
+
+.planet-info p {
+    color: #a0a9ff;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.alignment-indicator {
+    flex-grow: 1;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.alignment-progress {
+    background: rgba(0, 0, 0, 0.3);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #00d4ff, #00ff88);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.alignment-time {
+    color: #00ff88;
+    font-family: 'Orbitron', monospace;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.alignment-effects {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.alignment-effects h4 {
+    color: #00d4ff;
+    margin-bottom: 10px;
+}
+
+.alignment-effects ul {
+    color: #d0d7ff;
+    padding-left: 20px;
+}
+
+.alignment-effects li {
+    margin-bottom: 5px;
+}
+
+.log-entries {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.log-entry {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    align-items: center;
+}
+
+.log-time {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    color: #a0a9ff;
+}
+
+.log-level {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.log-level.info {
+    background: rgba(0, 212, 255, 0.2);
+    color: #00d4ff;
+}
+
+.log-level.warning {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+}
+
+.log-level.error {
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+}
+
+.log-message {
+    color: #d0d7ff;
+    font-size: 0.9rem;
+}
+
+.research-items {
+    margin-bottom: 20px;
+}
+
+.research-item {
+    margin-bottom: 20px;
+}
+
+.research-item h4 {
+    color: #e0e6ff;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.progress-container {
+    background: rgba(0, 0, 0, 0.3);
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.research-item .progress-bar {
+    background: linear-gradient(90deg, #ff6b6b, #ffc107);
+}
+
+.research-item p {
+    color: #a0a9ff;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.research-warning {
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.env-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.metric {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+
+.metric-label {
+    display: block;
+    color: #a0a9ff;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.metric-value {
+    display: block;
+    color: #e0e6ff;
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.metric-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 10px;
+}
+
+.metric-status.normal {
+    background: rgba(0, 255, 136, 0.2);
+    color: #00ff88;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .alignment-display {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .env-metrics {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

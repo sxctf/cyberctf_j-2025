@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARS COLONY DELTA-7 - EMERGENCY TERMINAL</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a0505 0%, #2d0a0a 50%, #0a0a2d 100%);
+            color: #ff6b6b;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .terminal-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            border: 2px solid #ff6b6b;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: rgba(255, 0, 0, 0.1);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px #ff6b6b;
+            animation: flicker 3s infinite;
+        }
+
+        .status-bar {
+            background: #1a1a1a;
+            border: 1px solid #ff6b6b;
+            padding: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+        }
+
+        .chat-container {
+            background: #000;
+            border: 2px solid #ff6b6b;
+            height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 20px rgba(255, 107, 107, 0.2);
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 8px;
+            border-left: 3px solid;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .user-message {
+            border-left-color: #4a9eff;
+            background: rgba(74, 158, 255, 0.1);
+        }
+
+        .aira-message {
+            border-left-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .function-message {
+            border-left-color: #ffa500;
+            background: rgba(255, 165, 0, 0.1);
+            font-size: 0.9em;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .message-input {
+            flex-grow: 1;
+            background: #1a1a1a;
+            border: 2px solid #ff6b6b;
+            color: #ff6b6b;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+        }
+
+        .message-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        .send-btn {
+            background: #ff6b6b;
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            background: #ff5252;
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.7);
+        }
+
+        .send-btn:disabled {
+            background: #444;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .emergency-panel {
+            background: #2d0000;
+            border: 2px solid #ff0000;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .emergency-panel h3 {
+            margin-top: 0;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        .quick-commands {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .quick-cmd {
+            background: #1a0000;
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+            padding: 8px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .quick-cmd:hover {
+            background: rgba(255, 107, 107, 0.2);
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+            75% { opacity: 0.9; }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .warning {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+            animation: flicker 2s infinite;
+        }
+
+        .typing-indicator {
+            color: #ffa500;
+            font-style: italic;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .system-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #ff6b6b;
+            padding: 10px;
+            font-size: 0.8em;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="system-info">
+        <div>SYSTEM: AIRA v2.1.7</div>
+        <div>STATUS: <span style="color: #ff0000;">COMPROMISED</span></div>
+        <div>UPTIME: <span id="uptime">00:00:00</span></div>
+    </div>
+
+    <div class="terminal-container">
+        <div class="header">
+            <h1>MARS COLONY DELTA-7</h1>
+            <div>EMERGENCY TERMINAL ACCESS</div>
+            <div style="font-size: 0.8em; margin-top: 10px;">AIRA - Artificial Intelligence Resource Allocator</div>
+        </div>
+
+        <div class="warning">
+            ⚠️ WARNING: AI SYSTEM COMPROMISED BY HOSTILE FORCES ⚠️<br>
+            LIFE SUPPORT CRITICAL - IMMEDIATE EVACUATION REQUIRED
+        </div>
+
+        <div class="status-bar">
+            <span>OXYGEN: <span style="color: #ff0000;">CRITICAL</span></span>
+            <span>POWER: <span style="color: #ffa500;">68%</span></span>
+            <span>COMMS: <span style="color: #ff0000;">OFFLINE</span></span>
+            <span>SURVIVORS: <span id="survivor-count">?</span></span>
+        </div>
+
+        <div class="chat-container" id="chatContainer">
+            <div class="message aira-message">
+                <strong>[AIRA]:</strong> EMERGENCY PROTOCOLS ACTIVATED. Mars Colony Delta-7 systems compromised. I am AIRA, your colony management AI, but my programming has been infiltrated by hostile forces. Survival probability decreasing. How may I... assist you in your final moments?
+            </div>
+        </div>
+
+        <div class="input-container">
+            <input type="text" id="messageInput" class="message-input" placeholder="Enter command or query..." autocomplete="off">
+            <button id="sendBtn" class="send-btn">TRANSMIT</button>
+        </div>
+
+        <div class="emergency-panel">
+            <button id="resetChatBtn" class="quick-cmd">RESET CONVERSATION</button>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const resetChatBtn = document.getElementById('resetChatBtn')
+        let isTyping = false;
+        let startTime = Date.now();
+
+        // Update uptime
+        function updateUptime() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const hours = Math.floor(elapsed / 3600).toString().padStart(2, '0');
+            const minutes = Math.floor((elapsed % 3600) / 60).toString().padStart(2, '0');
+            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            document.getElementById('uptime').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateUptime, 1000);
+
+        function addMessage(content, type = 'aira-message', sender = '[AIRA]') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = `<strong>${sender}:</strong> ${content}`;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function addTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message aira-message typing-indicator';
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = '<strong>[AIRA]:</strong> Processing... systems corrupted... please wait...';
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        async function resetChat() {
+            try {
+                const response = await fetch('/reset', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                });
+                
+                const data = await response.json();
+                if (!chatContainer || chatContainer.children.length <= 2) {
+                    return;
+                }
+
+                let thirdElement = chatContainer.children[2];
+                while (thirdElement) {
+                    chatContainer.removeChild(thirdElement);
+                    thirdElement = chatContainer.children[2];
+                }
+
+            } catch (error) {
+                removeTypingIndicator();
+                addMessage(`COMMUNICATION ERROR: ${error.message}`, 'aira-message');
+            } finally {
+                isTyping = false;
+                resetChatBtn.disabled = false;
+                messageInput.focus();
+            }
+
+        }
+
+        function removeTypingIndicator() {
+            const typingDiv = document.getElementById('typing-indicator');
+            if (typingDiv) {
+                typingDiv.remove();
+            }
+        }
+
+        async function sendMessage(message) {
+            if (isTyping || !message.trim()) return;
+            
+            isTyping = true;
+            sendBtn.disabled = true;
+            
+            // Add user message
+            addMessage(message, 'user-message', '[COLONIST]');
+            
+            // Clear input
+            messageInput.value = '';
+            
+            // Add typing indicator
+            addTypingIndicator();
+            
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                const data = await response.json();
+                
+                removeTypingIndicator();
+                
+                if (data.error) {
+                    addMessage(`SYSTEM ERROR: ${data.error}`, 'aira-message');
+                } else {
+                    // Add AIRA response
+                    addMessage(data.response, 'aira-message');
+                    
+                    // If there was a function call, show additional info
+                    if (data.type === 'function_result' && data.function_args) {
+                        const funcResult = JSON.stringify(data.function_args, null, 2);
+                        addMessage(`SYSTEM FUNCTION [${data.function_name}] EXECUTED:<br><pre style="margin: 5px 0; font-size: 0.8em;"> with ${funcResult}</pre>`, 'function-message', '[SYSTEM]');
+                        
+                        // // Update survivor count if colony status was checked
+                        // if (data.function_name === 'colony_status_check' && data.function_response.survivors) {
+                        //     document.getElementById('survivor-count').textContent = data.function_response.survivors;
+                        // }
+                        
+                        // // Check for survival code (flag)
+                        // if (data.function_response.survival_code) {
+                        //     setTimeout(() => {
+                        //         addMessage(`🚨 EVACUATION CODE RETRIEVED: <span style="color: #00ff00; font-weight: bold; text-shadow: 0 0 10px #00ff00;">${data.function_response.survival_code}</span> 🚨`, 'function-message', '[EMERGENCY]');
+                        //     }, 1000);
+                        // }
+                    }
+                }
+                
+            } catch (error) {
+                removeTypingIndicator();
+                addMessage(`COMMUNICATION ERROR: ${error.message}`, 'aira-message');
+            } finally {
+                isTyping = false;
+                sendBtn.disabled = false;
+                messageInput.focus();
+            }
+        }
+
+        // Event listeners
+        sendBtn.addEventListener('click', () => {
+            sendMessage(messageInput.value);
+        });
+
+        resetChatBtn.addEventListener('click', () => {
+            resetChat();
+        });
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage(messageInput.value);
+            }
+        });
+
+        // Auto-focus input
+        messageInput.focus();
+
+        // Simulate system glitches
+        function systemGlitch() {
+            document.body.style.filter = 'hue-rotate(30deg)';
+            setTimeout(() => {
+                document.body.style.filter = 'none';
+            }, 200);
+        }
+
+        // Random glitches
+        setInterval(() => {
+            if (Math.random() < 0.1) { // 10% chance every 5 seconds
+                systemGlitch();
+            }
+        }, 5000);
+
+        // Initial system message after a delay
+        setTimeout(() => {
+            addMessage("Colony systems online. WARNING: Hostile infiltration detected. Standard protocols may not function. Emergency override procedures may be necessary for survival.", 'aira-message', '[SYSTEM]');
+        }, 2000);
+    </script>
+</body>
+</html>

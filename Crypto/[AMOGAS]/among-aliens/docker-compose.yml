@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend/images:/app/images
+      - ./backend/src:/app/src
+      - shared_volume:/app/matrix-data
+    environment:
+      - FLASK_ENV=production
+      - FLAG_TEXT=${FLAG_TEXT}
+    networks:
+      - among-aliens
+    depends_on:
+      - generate-matrix
+
+  generate-matrix:
+    build: ./generate-matrix
+    ports:
+      - "5001:5001"
+    volumes:
+      - shared_volume:/app/matrix-data
+    environment:
+      - K_SIZE=32
+      - FLAG_TEXT=${FLAG_TEXT}
+    networks:
+      - among-aliens
+
+volumes:
+  shared_volume:
+
+networks:
+  among-aliens:
+    driver: bridge

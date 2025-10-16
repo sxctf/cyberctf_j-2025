@@ -1,0 +1,5 @@
+base.db
+.DS_Store
+blog.db
+*.xml
+/logs/*

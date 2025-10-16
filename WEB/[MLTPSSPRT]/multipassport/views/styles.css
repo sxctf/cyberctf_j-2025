@@ -1,0 +1,197 @@
+body {
+    font-family: 'Courier New', monospace;
+    background-color: #0a0a1a;
+    color: #00ffcc;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
+}
+
+textarea {
+    width: 100%;
+    min-height: 200px;
+    border-radius: 8px;
+    border: none;
+    padding: 12px;
+    font-size: 1em;
+    background: #1a1d22;
+    color: #f8f8f2;
+    margin-bottom: 1em;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    max-width: 600px; 
+    margin: 60px auto; 
+}
+
+.passport {
+    width: 600px;
+    height: 400px;
+    background: linear-gradient(145deg, #001a33, #000022);
+    border: 3px solid #00ffcc;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.passport::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.1;
+}
+
+.header {
+    text-align: center;
+    border-bottom: 2px dashed #00ffcc;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px #00ffcc;
+}
+
+.header p {
+    margin: 5px 0 0;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.content {
+    display: flex;
+    gap: 20px;
+}
+
+.photo {
+    width: 150px;
+    height: 180px;
+    border: 2px solid #00ffcc;
+    background-color: #001a33;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.details {
+    flex: 1;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.detail-label {
+    width: 120px;
+    font-weight: bold;
+    opacity: 0.8;
+}
+
+.detail-value {
+    flex: 1;
+    border-bottom: 1px dotted #00ffcc;
+}
+
+.footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+.holo-stamp {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(0,255,204,0.3) 0%, rgba(0,255,204,0) 70%);
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+button {
+    background: linear-gradient(145deg, #003366, #001a33);
+    color: #00ffcc;
+    border: 2px solid #00ffcc;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px rgba(0, 255, 204, 0.5);
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    margin: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover {
+    background: linear-gradient(145deg, #004080, #00264d);
+    box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+}
+
+button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(0, 255, 204, 0.1);
+    transform: rotate(45deg);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+button:hover::after {
+    opacity: 1;
+}
+
+.result {
+    margin-top: 1.5em;
+    text-align: center;
+}
+
+.result a {
+    color: #00b894; 
+    word-break: break-all;
+}

@@ -1,0 +1,15 @@
+services:
+  multipassport:
+    build:
+      context: ./
+    container_name: multipassport
+    ports:
+      - "1337:1337"
+    environment:
+      - ${FLAG}:${FLAG}
+    networks: 
+      multipassport:
+
+networks:
+  multipassport:
+    driver: bridge

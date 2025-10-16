@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New report</title>
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="form-container">
+                <h3 class="form-title">Create a report</h3>
+                <form method="POST" enctype="multipart/form-data" action="/new-post">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title:</label>
+                        <input type="text" class="form-control" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Description:</label>
+                        <textarea class="form-control" name="content" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Create</button>
+                </form>
+            </div>
+
+            <div class="form-container">
+                <h3 class="form-title">Bulk upload</h3>
+                <form method="POST" enctype="multipart/form-data" action="/upload" id="uploadForm">
+                    <div class="mb-3">
+                        <label for="stream_file" class="form-label">XML-file for bulk upload:</label>
+                        <input type="file" class="form-control" name="file" accept="application/xml,text/xml" required>
+                        <div class="form-text">File should contain &lt;post&gt; с &lt;title&gt; and &lt;description&gt;</div>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block">Upload</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('input[type="file"]').forEach(input => {
+        input.addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'Choose a file...';
+            const label = this.parentElement.querySelector('.form-label');
+            if (label) {
+                label.textContent = fileName;
+            }
+        });
+    });
+
+    document.getElementById('uploadForm').action = '/upload';
+</script>
+
+</body>
+</html>
+{% endblock %}

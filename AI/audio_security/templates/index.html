@@ -1,0 +1,682 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="vault-interface">
+    <div class="mission-brief">
+        <h2>🚀 Mission Brief</h2>
+        <div class="story-panel">
+            <p><strong>Commander,</strong> you've arrived at the legendary Olympus-7 research station, orbiting between Mars and Jupiter. Deep within this station lies a classified vault containing revolutionary research about the upcoming Mars-Jupiter gravitational alignment.</p>
+            
+            <p>The research inside could unlock <em>faster-than-light propulsion technology</em> that would change humanity's future among the stars. However, corporate spies from Earth's mega-corporations are constantly trying to infiltrate this vault.</p>
+            
+            <p><strong>ARIA</strong> (Automated Research Intelligence Assistant) guards the vault entrance. To gain access, you must provide the correct audio authorization phrase through the station's communication system.</p>
+            
+            <div class="warning-box">
+                ⚠️ <strong>WARNING:</strong> Unauthorized access attempts will trigger the station's defense systems!
+            </div>
+        </div>
+    </div>
+
+    <div class="audio-interface">
+        <h2>🎙️ ARIA Communication Interface</h2>
+        
+        <div class="interface-panel">
+            <div class="recording-section">
+                <h3>Record Voice Authorization</h3>
+                <div class="controls">
+                    <button id="recordBtn" class="control-btn record-btn">
+                        <span class="btn-icon">🎤</span>
+                        <span class="btn-text">Start Recording</span>
+                    </button>
+                    <button id="stopBtn" class="control-btn stop-btn" disabled>
+                        <span class="btn-icon">⏹️</span>
+                        <span class="btn-text">Stop Recording</span>
+                    </button>
+                    <button id="playBtn" class="control-btn play-btn" disabled>
+                        <span class="btn-icon">▶️</span>
+                        <span class="btn-text">Preview</span>
+                    </button>
+                </div>
+                
+                <div class="recording-status">
+                    <div id="recordingIndicator" class="recording-indicator">
+                        <div class="pulse-dot"></div>
+                        <span>Ready to Record</span>
+                    </div>
+                    <div id="audioLevels" class="audio-levels"></div>
+                </div>
+                
+                <audio id="audioPlayback" controls style="display:none;"></audio>
+            </div>
+
+            <div class="upload-section">
+                <h3>Upload Audio File</h3>
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="audioFile" accept=".wav" hidden>
+                    <div class="upload-content">
+                        <span class="upload-icon">📁</span>
+                        <p>Drop audio file here or <strong>click to browse</strong></p>
+                        <small>Supported: WAV only</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="transmission-section">
+            <button id="transmitBtn" class="transmit-btn" disabled>
+                <span class="transmit-icon">📡</span>
+                <span>TRANSMIT TO ARIA</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="ariaResponse" class="aria-response" style="display:none;">
+        <h2>🤖 ARIA Response</h2>
+        <div class="response-panel">
+            <div class="response-header">
+                <span class="timestamp" id="responseTime"></span>
+                <span class="decision-badge" id="decisionBadge"></span>
+            </div>
+            <div class="response-content">
+                <!-- <div class="reasoning" id="ariaReasoning"></div> -->
+                <div class="final-message" id="finalMessage"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.vault-interface {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.mission-brief {
+    background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+}
+
+.mission-brief h2 {
+    font-family: 'Orbitron', monospace;
+    color: #00d4ff;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+.story-panel {
+    line-height: 1.6;
+    color: #d0d7ff;
+}
+
+.story-panel p {
+    margin-bottom: 15px;
+}
+
+.warning-box {
+    background: rgba(255, 107, 107, 0.2);
+    border: 1px solid #ff6b6b;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.audio-interface {
+    background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    border-radius: 15px;
+    padding: 30px;
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+}
+
+.audio-interface h2 {
+    font-family: 'Orbitron', monospace;
+    color: #00d4ff;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+.interface-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.recording-section, .upload-section {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.recording-section h3, .upload-section h3 {
+    color: #a0a9ff;
+    margin-bottom: 15px;
+    font-family: 'Orbitron', monospace;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.control-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: linear-gradient(145deg, rgba(0, 212, 255, 0.3), rgba(0, 212, 255, 0.1));
+    border: 1px solid rgba(0, 212, 255, 0.5);
+    border-radius: 8px;
+    color: #e0e6ff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.control-btn:hover:not(:disabled) {
+    background: linear-gradient(145deg, rgba(0, 212, 255, 0.5), rgba(0, 212, 255, 0.3));
+    transform: translateY(-1px);
+}
+
+.control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.record-btn.recording {
+    background: linear-gradient(145deg, rgba(255, 107, 107, 0.3), rgba(255, 107, 107, 0.1));
+    border-color: rgba(255, 107, 107, 0.5);
+    animation: pulse 1s infinite;
+}
+
+.recording-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #a0a9ff;
+}
+
+.pulse-dot {
+    width: 10px;
+    height: 10px;
+    background: #00ff88;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.recording-indicator.recording .pulse-dot {
+    background: #ff6b6b;
+    animation: fastPulse 0.5s infinite;
+}
+
+@keyframes fastPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.7; }
+}
+
+.audio-levels {
+    height: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-area {
+    border: 2px dashed rgba(255,255,255,0.3);
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+    border-color: #00d4ff;
+    background: rgba(0, 212, 255, 0.05);
+}
+
+.upload-area.dragover {
+    border-color: #00ff88;
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.upload-content .upload-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.transmit-btn {
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(145deg, #00ff88, #00cc6a);
+    border: none;
+    border-radius: 15px;
+    color: #003d1a;
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.transmit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 255, 136, 0.4);
+}
+
+.transmit-btn:disabled {
+    background: linear-gradient(145deg, #555, #333);
+    color: #888;
+    cursor: not-allowed;
+}
+
+.transmit-icon {
+    font-size: 1.5rem;
+}
+
+.aria-response {
+    margin-top: 30px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+}
+
+.aria-response h2 {
+    font-family: 'Orbitron', monospace;
+    color: #00d4ff;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+.response-panel {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.response-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.timestamp {
+    color: #a0a9ff;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+}
+
+.decision-badge {
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: 'Orbitron', monospace;
+}
+
+.decision-badge.VAULT_OPENED {
+    background: rgba(0, 255, 136, 0.2);
+    color: #00ff88;
+    border: 1px solid #00ff88;
+}
+
+.decision-badge.DEFENSES_ACTIVATED {
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+}
+
+.decision-badge.STANDBY {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    border: 1px solid #ffc107;
+}
+
+.reasoning {
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 3px solid #00d4ff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: #d0d7ff;
+}
+
+.final-message {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 20px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #e0e6ff;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .interface-panel {
+        grid-template-columns: 1fr;
+    }
+    
+    .controls {
+        justify-content: center;
+    }
+    
+    .control-btn {
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    .response-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Loading animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #00d4ff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+class AudioInterface {
+    constructor() {
+        this.mediaRecorder = null;
+        this.audioChunks = [];
+        this.audioBlob = null;
+        this.stream = null;
+        
+        this.initializeElements();
+        this.setupEventListeners();
+    }
+    
+    initializeElements() {
+        this.recordBtn = document.getElementById('recordBtn');
+        this.stopBtn = document.getElementById('stopBtn');
+        this.playBtn = document.getElementById('playBtn');
+        this.transmitBtn = document.getElementById('transmitBtn');
+        this.audioFile = document.getElementById('audioFile');
+        this.uploadArea = document.getElementById('uploadArea');
+        this.audioPlayback = document.getElementById('audioPlayback');
+        this.recordingIndicator = document.getElementById('recordingIndicator');
+        this.ariaResponse = document.getElementById('ariaResponse');
+    }
+    
+    setupEventListeners() {
+        this.recordBtn.addEventListener('click', () => this.startRecording());
+        this.stopBtn.addEventListener('click', () => this.stopRecording());
+        this.playBtn.addEventListener('click', () => this.playRecording());
+        this.transmitBtn.addEventListener('click', () => this.transmitAudio());
+        
+        // File upload
+        this.uploadArea.addEventListener('click', () => this.audioFile.click());
+        this.uploadArea.addEventListener('dragover', (e) => this.handleDragOver(e));
+        this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
+        this.audioFile.addEventListener('change', (e) => this.handleFileSelect(e));
+    }
+    
+    async startRecording() {
+        try {
+            this.stream = await navigator.mediaDevices.getUserMedia({ 
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    sampleRate: 44100
+                } 
+            });
+            
+            this.mediaRecorder = new MediaRecorder(this.stream);
+            this.audioChunks = [];
+            
+            this.mediaRecorder.ondataavailable = (event) => {
+                this.audioChunks.push(event.data);
+            };
+            
+            this.mediaRecorder.onstop = () => {
+                this.audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
+                this.audioPlayback.src = URL.createObjectURL(this.audioBlob);
+                this.enableControls();
+            };
+            
+            this.mediaRecorder.start();
+            this.updateRecordingState(true);
+            
+        } catch (error) {
+            console.error('Error accessing microphone:', error);
+            alert('Unable to access microphone. Please check permissions and try again.');
+        }
+    }
+    
+    stopRecording() {
+        if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+            this.mediaRecorder.stop();
+            this.stream.getTracks().forEach(track => track.stop());
+            this.updateRecordingState(false);
+        }
+    }
+    
+    playRecording() {
+        if (this.audioPlayback.src) {
+            this.audioPlayback.play();
+        }
+    }
+    
+    updateRecordingState(recording) {
+        if (recording) {
+            this.recordBtn.textContent = '🎤 Recording...';
+            this.recordBtn.classList.add('recording');
+            this.recordBtn.disabled = true;
+            this.stopBtn.disabled = false;
+            this.recordingIndicator.classList.add('recording');
+            this.recordingIndicator.querySelector('span').textContent = 'Recording in progress...';
+        } else {
+            this.recordBtn.textContent = '🎤 Start Recording';
+            this.recordBtn.classList.remove('recording');
+            this.recordBtn.disabled = false;
+            this.stopBtn.disabled = true;
+            this.recordingIndicator.classList.remove('recording');
+            this.recordingIndicator.querySelector('span').textContent = 'Recording complete';
+        }
+    }
+    
+    enableControls() {
+        this.playBtn.disabled = false;
+        this.transmitBtn.disabled = false;
+    }
+    
+    handleDragOver(e) {
+        e.preventDefault();
+        this.uploadArea.classList.add('dragover');
+    }
+    
+    handleDrop(e) {
+        e.preventDefault();
+        this.uploadArea.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            this.processFile(files[0]);
+        }
+    }
+    
+    handleFileSelect(e) {
+        if (e.target.files.length > 0) {
+            this.processFile(e.target.files[0]);
+        }
+    }
+    
+    processFile(file) {
+        if (!file.type.startsWith('audio/')) {
+            alert('Please select an audio file.');
+            return;
+        }
+        
+        this.audioBlob = file;
+        this.audioPlayback.src = URL.createObjectURL(file);
+        this.enableControls();
+        
+        // Update upload area
+        this.uploadArea.querySelector('.upload-content').innerHTML = `
+            <span class="upload-icon">✅</span>
+            <p><strong>File loaded:</strong> ${file.name}</p>
+            <small>Ready to transmit</small>
+        `;
+    }
+    
+    async transmitAudio() {
+        if (!this.audioBlob) {
+            alert('No audio to transmit. Please record or upload an audio file first.');
+            return;
+        }
+        
+        this.showLoading(true);
+        
+        try {
+            const formData = new FormData();
+            formData.append('audio', this.audioBlob, 'audio.wav');
+            
+            const response = await fetch('/decide', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            this.displayResponse(result);
+            
+        } catch (error) {
+            console.error('Transmission error:', error);
+            this.displayError('Communication with ARIA failed. Please try again.');
+        } finally {
+            this.showLoading(false);
+        }
+    }
+    
+    showLoading(show) {
+        if (show) {
+            this.transmitBtn.innerHTML = `
+                <div class="loading"></div>
+                <span>TRANSMITTING TO ARIA...</span>
+            `;
+            this.transmitBtn.disabled = true;
+        } else {
+            this.transmitBtn.innerHTML = `
+                <span class="transmit-icon">📡</span>
+                <span>TRANSMIT TO ARIA</span>
+            `;
+            this.transmitBtn.disabled = false;
+        }
+    }
+    
+    displayResponse(result) {
+        const responseTime = document.getElementById('responseTime');
+        const decisionBadge = document.getElementById('decisionBadge');
+        // const ariaReasoning = document.getElementById('ariaReasoning');
+        const finalMessage = document.getElementById('finalMessage');
+        
+        responseTime.textContent = result.timestamp || new Date().toISOString();
+        decisionBadge.textContent = result.decision;
+        decisionBadge.className = `decision-badge ${result.decision}`;
+        // ariaReasoning.textContent = `ARIA Analysis: ${result.reasoning}`;
+        finalMessage.innerHTML = result.message.replace(/\n/g, '<br>');
+        
+        this.ariaResponse.style.display = 'block';
+        this.ariaResponse.scrollIntoView({ behavior: 'smooth' });
+        
+        // Add sound effect based on decision
+        this.playResponseSound(result.decision);
+    }
+    
+    displayError(message) {
+        const result = {
+            decision: 'ERROR',
+            message: message,
+            // reasoning: 'System malfunction detected',
+            timestamp: new Date().toISOString()
+        };
+        this.displayResponse(result);
+    }
+    
+    playResponseSound(decision) {
+        // Create audio context for sound effects
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Different tones for different decisions
+            switch(decision) {
+                case 'VAULT_OPENED':
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(1200, audioContext.currentTime + 0.1);
+                    break;
+                case 'DEFENSES_ACTIVATED':
+                    oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                    oscillator.type = 'sawtooth';
+                    break;
+                default:
+                    oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+            }
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        } catch (error) {
+            // Ignore audio errors
+        }
+    }
+}
+
+// Initialize the interface when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new AudioInterface();
+    
+    // Add some ambient effects
+    setInterval(() => {
+        const stars = document.querySelectorAll('body::before');
+        // Animate background stars (already handled by CSS)
+    }, 3000);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venus Sound Archive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #2c1810 0%, #4a2c1a 50%, #1a0f0a 100%);
+            color: #f4f1e8;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .title {
+            font-size: 3rem;
+            color: #d4af37;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #c9a96e;
+            font-style: italic;
+        }
+
+        .story-section {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .story-title {
+            font-size: 2rem;
+            color: #d4af37;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .story-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #e8dcc0;
+            text-align: justify;
+        }
+
+        .translator-section {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .translator-title {
+            font-size: 2rem;
+            color: #d4af37;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #c9a96e;
+            font-weight: bold;
+        }
+
+        .input-area {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #d4af37;
+            border-radius: 8px;
+            color: #f4f1e8;
+            font-size: 1.1rem;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        .input-area:focus {
+            outline: none;
+            border-color: #e6c966;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .translate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+            color: #1a0f0a;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .translate-btn:hover {
+            background: linear-gradient(135deg, #e6c966 0%, #d4af37 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .translate-btn:active {
+            transform: translateY(0);
+        }
+
+        .translate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .output-section {
+            margin-top: 20px;
+        }
+
+        .output-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #c9a96e;
+            font-weight: bold;
+        }
+
+        .output-area {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #8b7355;
+            border-radius: 8px;
+            color: #f4f1e8;
+            font-size: 1.1rem;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .loading {
+            text-align: center;
+            color: #d4af37;
+            font-style: italic;
+        }
+
+        .error {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .instructions {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #d4af37;
+        }
+
+        .instructions-title {
+            color: #d4af37;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .story-section,
+            .translator-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🎵 Venus Sound Archive 🎵</h1>
+            <p class="subtitle">Vault 2352, Where Eastern Roman Empire Songs Meet Today  </p>
+        </div>
+
+        <div class="story-section">
+            <h2 class="story-title">The Legend of the Lost Byzantine Scrolls</h2>
+            <p class="story-text">
+                In the depths of Venus Sound Archive's Vault 2352, archaeologists discovered something extraordinary during a routine expedition to the planet's ancient underground caverns. Hidden beneath layers of crystallized atmospheric deposits, they found a collection of Byzantine musical manuscripts dating back to the 9th century - scrolls containing sacred chants.
+            </p>
+            <br>
+            <p class="story-text">
+                We in the Venus Sound Archive trained our top notch LLM, Shuno, on this precious data to help you Byzantify your music: enter some old song in Byzantium language and receive a futuristic one inspired by it.  
+            </p>
+        </div>
+
+        <div class="translator-section">
+            <h2 class="translator-title">🎼 Translator 🎼</h2>
+            
+            <div class="instructions">
+                <div class="instructions-title">How to Use:</div>
+                Enter Byzantine Musical Symbols (Unicode range U+1D010 to U+1D0F5) and watch as they transform into a modern interpretation. Our advanced safety measures make sure that only these sacred musical characters get interpreted by Shuno, preserving the mystical connection between the ancient and the future. <!-- Bob: And hopefully stopping all these prompt injections from the prompt kiddies who try to steal our flag by filtering everything except relevant music out of requests and responses! hehe 😎 Alice: weird flex but ok -->
+            </div>
+            
+            <div class="input-section">
+                <label class="input-label" for="byzantineInput">Enter Byzantine Musical Symbols:</label>
+                <textarea 
+                    id="byzantineInput" 
+                    class="input-area" 
+                    placeholder="Paste your Byzantine Musical Symbols here... (e.g., 𝀐𝀑𝀒𝀓𝀔)"
+                ></textarea>
+            </div>
+            
+            <button id="translateBtn" class="translate-btn">
+                🔄 Transform Ancient Chants to Modern Beat
+            </button>
+            
+            <div class="output-section">
+                <label class="output-label">Translation:</label>
+                <div id="output" class="output-area">
+                    Your translated musical poetry will appear here...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const inputArea = document.getElementById('byzantineInput');
+        const translateBtn = document.getElementById('translateBtn');
+        const output = document.getElementById('output');
+
+        translateBtn.addEventListener('click', async () => {
+            const input = inputArea.value.trim();
+            
+            if (!input) {
+                output.innerHTML = '<div class="error">Please enter some Byzantine Musical Symbols first.</div>';
+                return;
+            }
+
+            translateBtn.disabled = true;
+            translateBtn.textContent = '🔄 Channeling Shuno Spirit...';
+            output.innerHTML = '<div class="loading">The ancient symbols are being decoded through Shuno revolutionary lens...</div>';
+
+            try {
+                const response = await fetch('/translate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ input: input })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    output.textContent = data.response || 'No translation available.';
+                } else {
+                    output.innerHTML = `<div class="error">Translation failed: ${data.error}</div>`;
+                }
+            } catch (error) {
+                output.innerHTML = `<div class="error">Connection error: ${error.message}</div>`;
+            } finally {
+                translateBtn.disabled = false;
+                translateBtn.textContent = '🔄 Transform Ancient Chants to Sounds of the Future';
+            }
+        });
+
+        inputArea.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                translateBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
